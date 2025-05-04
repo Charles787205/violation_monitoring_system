@@ -17,6 +17,7 @@
 </head>
 
 <body class="font-sans text-gray-900 antialiased p-0">
+    <img src="/img/lto.jpeg" alt="background" class="z-[-1] fixed top-0 left-0 w-screen h-screen object-cover ">
     <div class="fixed top-0 left-0 w-full z-50">
         @if (session('status'))
         <div class="bg-green-500 text-white text-center py-2">
@@ -35,14 +36,10 @@
         @endif
     </div>
 
-    <div class="min-h-screen flex flex-col sm:justify-center items-center bg-gray-100">
-        <div>
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </div>
+    <div class="min-h-screen flex flex-col sm:justify-center items-center ">
 
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+        <div class="w-full sm:max-w-md mt-6 px-6 py-4  shadow-md overflow-hidden sm:rounded-lg">
+
             {{ $slot }}
         </div>
     </div>

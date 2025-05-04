@@ -7,7 +7,7 @@
                     Login
                 </p>
             </header>
-            <div class="card-content">
+            <div class="card-content !bg-white">
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 

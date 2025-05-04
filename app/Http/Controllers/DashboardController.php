@@ -8,16 +8,28 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $numberOfOwners = OwnerDetail::count();
         $pendingViolations = Violation::where('status', 'pending')->count();
         $totalPayments = Violation::sum('amount');
+        if(auth()->user()->is_admin) {
+            $totalPayments = Violation::where('user_id', auth()->user()->id)->sum('amount');
+           
+            $totalVehicles = Vehicle::where('user_id', auth()->user()->id)->count();
+            $pendingViolations = Violation::whereHas('vehicle', function ($query) {
+                $query->whereColumn('plate_number', 'owner_details.plate_number');
+            })->where('user_id', auth()->user()->id)->count();
 
-        return view('dashboard', [
+        }
+        $view = auth()->user()->is_admin ? 'dashboard' : 'client/dashboard';
+
+        return view($view, [
             'numberOfOwners' => $numberOfOwners,
-            'pendingViolations' => $pendingViolations,
+            'activeViolations' => $pendingViolations,
             'totalPayments' => $totalPayments,
+            'totalVehicles' => $totalVehicles ?? 0,
+            'totalViolations' => Violation::all(),
         ]);
     }
 }

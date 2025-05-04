@@ -5,7 +5,6 @@
     </div>
   </div>
   <div class="menu is-menu-main">
-    @if (!(Auth::check() && Auth::user()->role === 'client'))
     <p class="menu-label">General</p>
     <ul class="menu-list">
       <!-- Dashboard -->
@@ -16,7 +15,6 @@
         </a>
       </li>
     </ul>
-    @endif
     <p class="menu-label">Management</p>
     <ul class="menu-list">
       @if (Auth::check() && Auth::user()->role === 'admin')
