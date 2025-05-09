@@ -13,8 +13,7 @@
           <p><strong>Violation Type:</strong> {{ $violation->violation_type }}</p>
           <p><strong>Amount:</strong> ${{ $violation->amount }}</p>
           <p><strong>Status:</strong> {{ ucfirst($violation->status) }}</p>
-          <p><strong>Paid At:</strong> {{ $violation->paid_at ? $violation->paid_at->format('Y-m-d H:i:s') : 'N/A' }}
-          </p>
+          <p><strong>Paid At:</strong> {{ $violation->formatted_paid_at }}</p>
         </div>
         <div class="buttons">
           <a href="{{ route('violations.edit', $violation) }}" class="button small green">

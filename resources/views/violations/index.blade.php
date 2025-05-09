@@ -35,7 +35,7 @@
               <td>{{ $violation->violation_type }}</td>
               <td>{{ $violation->amount }}</td>
               <td>{{ ucfirst($violation->status) }}</td>
-              <td>{{ $violation->paid_at ? explode(' ', $violation->paid_at)[0] : 'N/A' }}</td>
+              <td>{{ $violation->formatted_paid_at }}</td>
               <td class="actions-cell flex justify-start">
                 <div class="buttons right nowrap">
                   <button class="button small green disabled:bg-neutral-600 disabled:border-neutral-800"
