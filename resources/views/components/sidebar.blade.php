@@ -114,7 +114,8 @@
             </span>
             <span class="text-sm font-medium">My Violations</span>
             @php
-            $pendingCount = Auth::user()->violations()->where('status', 'pending')->count();
+            $pendingCount = Auth::user()->ownerDetail ? Auth::user()->ownerDetail->violations()->where('status',
+            'pending')->count() : 0;
             @endphp
             @if($pendingCount > 0)
             <span

@@ -52,4 +52,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(OwnerDetail::class);
     }
+    public function violations()
+    {
+        return $this->hasMany(Violation::class, 'license_plate', 'license_plate');
+    }
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class, 'license_plate', 'license_plate');
+    }
 }

@@ -19,6 +19,16 @@ class OwnerDetail extends Model
     {
         return $this->belongsTo(Vehicle::class);
     }
+    public function violations(){
+       return $this->hasManyThrough(
+        Violation::class,    // Target model
+        Vehicle::class,      // Intermediate model
+        'id',                // Foreign key on vehicles table for owner_details
+        'license_plate',     // Foreign key on violations table for vehicles
+        'id',                // Local key on owner_details
+        'license_plate'      // Local key on vehicles
+    );
+    }
 
     public function user()
     {
