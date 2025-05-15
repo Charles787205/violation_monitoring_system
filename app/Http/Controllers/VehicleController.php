@@ -8,9 +8,31 @@ use Illuminate\Http\Request;
 
 class VehicleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $vehicles = Vehicle::paginate(10); // Fetch paginated results
+        $query = Vehicle::query();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('license_plate', 'like', "%{$search}%")
+                  ->orWhere('make', 'like', "%{$search}%")
+                  ->orWhere('model', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Year filter
+        if ($request->filled('year')) {
+            $query->where('year', $request->input('year'));
+        }
+
+        // Fetch paginated results with relationships
+        $vehicles = $query->with(['user', 'violations'])->paginate(10);
+        
         return view('vehicles.index', compact('vehicles'));
     }
 

@@ -48,6 +48,7 @@ Route::middleware(['auth', ClientMiddleware::class])->group(function () {
     Route::post('/my-vehicles', [ClientController::class, 'store'])->name('client.store_vehicle');
     Route::get('/my-vehicles/create', [ClientController::class, 'createVehicle'])->name('client.create_vehicle');
     Route::get('/my-violations', [ClientController::class, 'myViolations'])->name('client.my_violations');
+    Route::post('/violations/{violation}/settle', [ViolationController::class, 'settle'])->name('violations.settle');
 });
 
 require __DIR__.'/auth.php';

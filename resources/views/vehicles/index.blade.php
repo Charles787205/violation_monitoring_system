@@ -16,6 +16,60 @@
         </div>
       </div>
 
+      <!-- Search and Filter Section -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 mb-6">
+        <header class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+          <div class="flex items-center space-x-2">
+            <span class="text-xl text-gray-700"><i class="mdi mdi-filter-variant"></i></span>
+            <h2 class="text-lg font-semibold text-gray-700">Search & Filter</h2>
+          </div>
+        </header>
+        <div class="p-6">
+          <form action="{{ route('vehicles.index') }}" method="GET" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Search Box -->
+              <div class="col-span-1 md:col-span-2">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                <div class="relative rounded-md shadow-sm">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="mdi mdi-magnify text-gray-400"></i>
+                  </div>
+                  <input type="text" name="search" id="search"
+                    class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-12 sm:text-sm border-gray-300 rounded-md"
+                    placeholder="License Plate, Make, Model or Owner" value="{{ request('search') }}">
+                </div>
+              </div>
+
+              <!-- Year Filter -->
+              <div>
+                <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                <select id="year" name="year"
+                  class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                  <option value="">All Years</option>
+                  @for ($i = date('Y'); $i >= date('Y')-30; $i--)
+                  <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                  @endfor
+                </select>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end space-x-3 pt-2">
+              <a href="{{ route('vehicles.index') }}"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <i class="mdi mdi-refresh mr-2"></i>
+                Reset
+              </a>
+              <button type="submit"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <i class="mdi mdi-filter mr-2"></i>
+                Apply Filters
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <!-- Vehicles Table Card -->
       <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
         <header class="bg-gray-50 px-6 py-4 border-b border-gray-100">
@@ -43,6 +97,9 @@
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Owner
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Violations
                 </th>
                 <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
@@ -80,6 +137,20 @@
                     </div>
                   </div>
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  @php $violationCount = $vehicle->violations->count(); @endphp
+                  @if($violationCount > 0)
+                  <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $violationCount > 3 ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' }}">
+                    {{ $violationCount }} {{ Str::plural('violation', $violationCount) }}
+                  </span>
+                  @else
+                  <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    No violations
+                  </span>
+                  @endif
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="flex items-center justify-end space-x-2">
                     <a href="{{ route('vehicles.edit', $vehicle) }}"
@@ -108,7 +179,7 @@
 
               @if($vehicles->count() === 0)
               <tr>
-                <td colspan="6" class="px-6 py-10 text-center text-gray-500">
+                <td colspan="7" class="px-6 py-10 text-center text-gray-500">
                   <div class="flex flex-col items-center justify-center">
                     <i class="mdi mdi-alert-circle-outline text-4xl text-gray-400"></i>
                     <p class="mt-2 text-lg">No vehicles found</p>
@@ -126,7 +197,7 @@
         </div>
 
         <div class="bg-white px-6 py-4 border-t border-gray-200">
-          {{ $vehicles->onEachSide(1)->links() }}
+          {{ $vehicles->withQueryString()->onEachSide(1)->links() }}
         </div>
       </div>
     </div>

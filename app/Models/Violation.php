@@ -15,6 +15,7 @@ class Violation extends Model
         'amount',
         'status',
         'paid_at',
+        'payment_receipt', // Added payment receipt field
     ];
     
     protected $casts = [
@@ -48,5 +49,30 @@ class Violation extends Model
     public function isPaid()
     {
         return $this->status === 'paid' && $this->paid_at !== null;
+    }
+
+    /**
+     * Check if the violation has a payment receipt
+     *
+     * @return bool
+     */
+    public function hasPaymentReceipt()
+    {
+        return !empty($this->payment_receipt);
+    }
+    
+    /**
+     * Mark violation as paid with receipt
+     *
+     * @param string $receiptPath
+     * @return void
+     */
+    public function markAsPaid($receiptPath)
+    {
+        $this->update([
+            'status' => 'paid',
+            'paid_at' => now(),
+            'payment_receipt' => $receiptPath
+        ]);
     }
 }

@@ -21,4 +21,9 @@ class Vehicle extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function violations()
+    {
+        return $this->hasMany(Violation::class, 'license_plate', 'license_plate');
+    }
 }
